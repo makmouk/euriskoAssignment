@@ -1,8 +1,20 @@
 import React from 'react';
-import { TextInput, View, Text } from 'react-native';
+import {
+  TextInput,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+} from 'react-native';
 
-const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
-  const { inputStyle, labelStyle, containerStyle } = styles;
+const Input = ({
+  value,
+  onChangeText,
+  placeholder,
+  secureTextEntry,
+  onSubmitEditing,
+}) => {
+  const {inputStyle, btnStyle, containerStyle, btnTxtStyle} = styles;
 
   return (
     <View style={containerStyle}>
@@ -13,12 +25,19 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
         style={inputStyle}
         value={value}
         onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
       />
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={btnStyle}
+        onPress={onSubmitEditing}>
+        <Text style={btnTxtStyle}>Search</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   inputStyle: {
     color: '#000',
     paddingRight: 5,
@@ -33,11 +52,27 @@ const styles = {
     marginRight: 10,
     marginBottom: 5,
     marginTop: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   containerStyle: {
-    backgroundColor: 'white'
-  }
-};
+    backgroundColor: 'white',
+  },
+  btnStyle: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    height: 45,
+    borderRadius: 10,
+    backgroundColor: '#007aff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    margin: 10,
+  },
+  btnTxtStyle: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});
 
-export { Input };
+export {Input};

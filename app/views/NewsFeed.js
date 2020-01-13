@@ -16,27 +16,23 @@ export class NewsFeed extends Component {
   state = {search: '', data: [], page: 2};
 
   componentDidMount() {
-    this.fetch(false, '', 0);
-    this.fetch(false, '', 1);
+    this.fetch('', 0);
+    this.fetch('', 1);
   }
 
-  fetch = (search, value, page) => {
+  fetch = (q, page) => {
     axios
       .get('https://api.nytimes.com/svc/search/v2/articlesearch.json', {
         params: {
           page,
-          q: search ? value : this.state.search,
+          q,
           'api-key': 'OAD0Qz0csaoDZLpw5ZR74TCeSjynnabJ',
         },
       })
       .then(response => {
-        if (search) {
-          this.setState({data: response.data.response.docs});
-        } else {
-          this.setState({
-            data: [...this.state.data, ...response.data.response.docs],
-          });
-        }
+        this.setState({
+          data: [...this.state.data, ...response.data.response.docs],
+        });
       });
   };
 
@@ -64,11 +60,11 @@ export class NewsFeed extends Component {
             placeholder={'Search...'}
             value={search}
             onSubmitEditing={() => {
-              this.setState({data: [], search: ''});
-              this.fetch(true, this.state.search, 0);
+              this.fetch(this.state.search, 0);
+              this.setState({data: [], search: '', page: 1});
             }}
             onChangeText={value => {
-              this.setState({search: value, page: 1});
+              this.setState({search: value});
             }}
           />
           <ScrollView
@@ -76,9 +72,9 @@ export class NewsFeed extends Component {
             onScroll={({nativeEvent}) => {
               if (isCloseToBottom(nativeEvent)) {
                 var page = this.state.page;
-                this.fetch(false, '', page);
+                this.fetch('', page);
                 page++;
-                this.fetch(false, '', page);
+                this.fetch('', page);
                 page++;
                 this.setState({page});
               }
